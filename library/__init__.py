@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, Blueprint
 from dotenv import load_dotenv
 from .extension import db, masrhmallow
 from .model import Book
-from .books.controller import books
+from .book.controller import books
 import os
 
 
