@@ -6,4 +6,4 @@ Tải các package sau:
 + flask_marshmallow
 + dotenv
 
-Thay đổi đường dẫn DATABASE_URL trong file .env về thành của mình: dổi username, password, db name
+Thay đổi đường dẫn DATABASE_URL trong file .env về thành của mình: đổi username, password, db name
