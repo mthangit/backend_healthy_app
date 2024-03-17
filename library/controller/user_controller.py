@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from .services import get_user_services, add_user_services, get_all_users_by_account_id_services, get_all_users_services
+from ..services.user_services import get_user_services, add_user_services, get_all_users_by_account_id_services, get_all_users_services
 
 
 users = Blueprint('users', __name__)
@@ -11,6 +11,7 @@ def get_users():
 		return get_user_services(id)
 	else:
 		return jsonify({'message': 'No user_id provided'}), 404
+
 
 @users.route('/users', methods=['GET'])
 def get_user():

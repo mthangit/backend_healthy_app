@@ -1,5 +1,4 @@
 from .extension import db
-		
 
 class Account(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -10,6 +9,7 @@ class Account(db.Model):
 	def __init__(self, email, password):
 		self.email = email
 		self.password = password
+		
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

@@ -2,6 +2,7 @@ from ..extension import db
 from ..library_ma import UserSchema
 from ..model import User
 from flask import request
+from flask_jwt_extended import jwt_required
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
