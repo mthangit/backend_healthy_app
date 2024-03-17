@@ -1,5 +1,9 @@
 from .extension import masrhmallow
 
-class BookSchema(masrhmallow.Schema):
+class UserSchema(masrhmallow.Schema):
 	class Meta:
-		fields = ('id', 'title', 'author', 'year', 'created_at', 'updated_at')
+		fields = ('id', 'username', 'age', 'height', 'weight', 'gender', 'excersise', 'aim', 'is_deleted')
+
+class AccountSchema(masrhmallow.Schema):
+	class Meta:
+		fields = ('id', 'user_id', 'email', 'password', 'created_at')
