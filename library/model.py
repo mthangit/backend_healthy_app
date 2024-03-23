@@ -24,14 +24,7 @@ class User(db.Model):
 	# account_id = db.Interger, db.ForeignKey('account.id'), nullable=False
 	account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
 
-	def __init__(self, username, age, height, weight, gender, exercise, aim, is_deleted, account_id):
+	def __init__(self, username, account_id):
 		self.username = username
-		self.age = age
-		self.height = height
-		self.weight = weight
-		self.gender = gender
-		self.exercise = exercise
-		self.aim = aim
-		self.is_deleted = is_deleted	
 		self.account_id = account_id
 

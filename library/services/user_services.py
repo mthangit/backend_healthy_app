@@ -1,33 +1,38 @@
 from ..extension import db
 from ..library_ma import UserSchema
 from ..model import User
-from flask import request
-from flask_jwt_extended import jwt_required
+from flask import jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
-def get_user_services(id):
-	return user_schema.jsonify(User.query.get(id))
+def add_user_services(username, account_id):
+	try:
+		new_user = User(username=username, account_id=account_id)
+		db.session.add(new_user)
+		db.session.commit()
+		return True
+	except Exception as e:
+		db.session.rollback()
+		return False
 
-def get_all_users_by_account_id_services(account_id):
-	return users_schema.jsonify(User.query.filter_by(account_id=account_id).all())
+def get_user_by_account_id_services(id):
+	user = User.query.filter_by(account_id=id).first()
+	return jsonify(user_schema.dump(user))
 
-def get_all_users_services():
-	return users_schema.jsonify(User.query.all())
+def get_username_by_account_id(id):
+	user = User.query.filter_by(account_id=id).first()
+	return user.username if user else None
 
-def add_user_services():
-	username = request.json['username']
-	age = request.json['age']
-	height = request.json['height']
-	weight = request.json['weight']
-	gender = request.json['gender']
-	exercise = request.json['exercise']
-	aim = request.json['aim']
-	is_deleted = request.json['is_deleted']
-	account_id = request.json['account_id']
-
-	new_user = User(username, age, height, weight, gender, exercise, aim, is_deleted, account_id)
-	db.session.add(new_user)
+@jwt_required()
+def update_user_services(age, weight, height, gender, aim):
+	account_id = get_jwt_identity()['account_id']
+	user = User.query.filter_by(account_id=id).first()
+	user.age = age
+	user.weight = weight
+	user.height = height
+	user.aim = aim
+	user.gender = gender
 	db.session.commit()
-	return user_schema.jsonify(new_user)
+	return jsonify(user_schema.dump(user))
