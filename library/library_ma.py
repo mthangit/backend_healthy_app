@@ -6,4 +6,4 @@ class UserSchema(masrhmallow.Schema):
 
 class AccountSchema(masrhmallow.Schema):
 	class Meta:
-		fields = ('id', 'email', 'password', 'created_at')
+		fields = ('id', 'email', 'password', 'created_at', 'authenticated')

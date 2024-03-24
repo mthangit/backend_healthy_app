@@ -19,7 +19,7 @@ def add_user_services(username, account_id):
 
 def get_user_by_account_id_services(id):
 	user = User.query.filter_by(account_id=id).first()
-	return jsonify(user_schema.dump(user))
+	return (user_schema.dump(user))
 
 def get_username_by_account_id(id):
 	user = User.query.filter_by(account_id=id).first()

@@ -46,3 +46,8 @@ def get_account_by_email_services(email):
 def account_exists(email):
 	return Account.query.filter_by(email=email).first() is not None
 
+def authenticate(email):
+	account = Account.query.filter_by(email=email).first()
+	account.authenticated = True
+	db.session.commit()
+	return True 
