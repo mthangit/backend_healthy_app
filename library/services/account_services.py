@@ -50,3 +50,10 @@ def authenticate(email):
 	account.authenticated = True
 	db.session.commit()
 	return True 
+
+
+def change_password(email, password):
+	account = Account.query.filter_by(email=email).first()
+	account.password = generate_password_hash(password).decode('utf-8')
+	db.session.commit()
+	return True

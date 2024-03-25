@@ -11,7 +11,7 @@ from ..services.account_services import (add_account_services,
 										 get_account_by_username_and_password_services)
 from datetime import timedelta
 from ..services.user_services import add_user_services, get_user_by_account_id_services, get_username_by_account_id
-from ..services.account_services import authenticate
+from ..services.account_services import authenticate, change_password
 from ..mail.mail_services import send_mail, reset_mail
 from .blocklist import BLOCKLIST
 import random
@@ -44,19 +44,22 @@ def decrypt(encrypted):
 	otp, token, expiredtime = decrypted.split(':')
 	return otp, token, expiredtime
 
-def otp_required_again(email):
+def otp_required(email, reset):
 	account = get_account_by_email_services(email)
 	username = get_username_by_account_id(account.json.get('account_id'))
 	info = {
 		'email': email,
 		'username': username,
 		'account_id': account.json.get('account_id'),
-		'creayed_at': account.json.get('created_at'),
+		'created_at': account.json.get('created_at'),
 	}
 	otp = create_otp()
 	access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
 	encrypt_string = encrypt_otp_token(otp, access_token)
-	send_mail("Activate your HealthBuddy account", [email], otp, username)
+	if reset == False:
+		send_mail("Activate your HealthBuddy account", [email], otp, username)
+	else:
+		reset_mail("Reset your HealthBuddy account password", [email], otp, username)
 	return jsonify({
 		'message': 'OTP sent to your email', 
 		'encrypted': encrypt_string, 
@@ -69,44 +72,75 @@ def otp_authenticated(otp_given, encrypted):
 	user = get_jwt_identity()
 	otp, token, expiredtime = decrypt(encrypted)
 	if int(expiredtime) < int(time.time()):
-		return jsonify({'message': 'OTP is expired'}), 401
+		# return jsonify({'message': 'OTP is expired'}), 401
+		return False
 	else:
 		otpIsValid = otp == otp_given
 		if not otpIsValid:
-			return jsonify({'message': 'Invalid OTP'}), 401
+			# return jsonify({'message': 'Invalid OTP'}), 401
+			return False
 		else:
 			email_from_token = user['email']
 			email_from_token_given = decode_token(token)['sub']['email']
 			if email_from_token == email_from_token_given:
-				authenticate(email_from_token)
-				return jsonify({'message': 'OTP is valid', 'code': "200", "status": "successfully"}), 200
+				# return jsonify({'message': 'OTP is valid', 'code': "200", "status": "successfully"}), 200
+				return True
 			else:
-				return jsonify({'message': 'Invalid otp from email'}), 401
+				# return jsonify({'message': 'Invalid otp from email'}), 401
+				return False
 
-
-
-def reset_password(email):
-	otp = create_otp()
-	account = get_account_by_email_services(email)
-	account_id = account.json.get('account_id')
-	if account:
-		info = {
-			'email': account.json.get('email'),
-			'username': get_username_by_account_id(account_id),
-			'account_id': account_id,
-			'creayed_at': account.json.get('created_at'),
-		}
-		access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
-		encrypt_string = encrypt_otp_token(otp, access_token)
-		reset_mail("Reset your HealthBuddy account password", [email], otp, info['username'])
+@jwt_required()
+def authenticated_account(otp_given, encrypted):
+	if otp_authenticated(otp_given, encrypted):
+		authenticate(get_jwt_identity()['email'])
 		return jsonify({
-			'message': 'OTP sent to your email', 
-			'encrypted': encrypt_string, 
-			'token': {
-				'access_token': access_token}
+			'message': 'Account authenticated',
+			'code': '200'
 		}), 200
 	else:
-		return jsonify({'message': 'Email not found', 'code': '404'}), 404
+		return jsonify({
+			'message': 'Invalid OTP',
+			'code': '401'
+		})
+
+
+@jwt_required()
+def authenticated_otp_reset(otp_given, encrypted):
+	result = otp_authenticated(otp_given, encrypted)
+	if result:
+		return jsonify({
+			'message': 'OTP is valid',
+			'code': '200'
+		})
+	else:
+		return jsonify({
+			'message': 'Invalid OTP',
+			'code': '401'
+		})
+
+@jwt_required()
+def reset_password(password):
+	email = get_jwt_identity()['email']
+	change_password(email, password)
+	account = get_account_by_email_services(email)
+	username = get_username_by_account_id(account.json.get('account_id'))
+	info = {
+		'email': email,
+		'username': username,
+		'account_id': account.json.get('account_id'),
+		'creayed_at': account.json.get('created_at'),
+	}
+	access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
+	refresh_token = create_refresh_token(identity=info, expires_delta=timedelta(weeks=1))
+	return jsonify({
+		'message': 'Password has been changed',
+		'code': '200',
+		'token': {
+			'access_token': access_token,
+			'refresh_token': refresh_token
+		}
+	})
+
 
 def test_reset():
 	return jsonify({'message': "Test"}), 200

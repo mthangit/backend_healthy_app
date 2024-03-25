@@ -6,11 +6,11 @@ from .auth_services import (login,
 							getUserInfoByToken, 
 							get_token, 
 							logout, 
-							otp_authenticated, 
 							read, 
-							otp_required_again, 
-							reset_password,
-							test_reset)
+							otp_required, 
+							authenticated_otp_reset,
+							authenticated_account,
+							reset_password)
 from cryptography.fernet import Fernet
 from ..config import FERNET_KEY
 import time, base64
@@ -74,11 +74,7 @@ def get_token_identity():
 def logout_user():
 	return logout()
 
-@auth.route('/api/otp-authenticated', methods=['POST'])
-def otp_auth():
-	otp = request.json.get('otp')
-	encrypted = request.json.get('encrypted')
-	return otp_authenticated(otp, encrypted)
+
 
 @auth.route('/api/test', methods=['GET'])
 def test():
@@ -89,12 +85,30 @@ def test():
 def read_token():
 	return read()
 
-@auth.route('/api/otp-required-again', methods=['POST'])
-def otp_required():
+@auth.route('/api/otp-required', methods=['POST'])
+def otp():
 	email = request.json.get('email')
-	return otp_required_again(email)
+	reset = request.json.get('reset')
+	if reset == "true":
+		resetpass = True
+	else:
+		resetpass = False
+	return otp_required(email, resetpass)
+
+@auth.route('/api/otp-reset-password', methods=['POST'])
+def otp_reset_password():
+	otp = request.json.get('otp')
+	encrypted = request.json.get('encrypted')
+	return authenticated_otp_reset(otp, encrypted)
+
+@auth.route('/api/otp-authenticated-account', methods=['POST'])
+def otp_auth():
+	otp = request.json.get('otp')
+	encrypted = request.json.get('encrypted')
+	return authenticated_account(otp, encrypted)
+
 
 @auth.route('/api/reset-password', methods=['POST'])
 def reset_password_route():
-	email = request.json.get('email')
-	return reset_password(email)
+	password = request.json.get('password')
+	return reset_password(password)
