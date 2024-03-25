@@ -36,3 +36,5 @@ def update_user_services(age, weight, height, gender, aim):
 	user.gender = gender
 	db.session.commit()
 	return jsonify(user_schema.dump(user))
+
+

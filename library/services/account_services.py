@@ -31,12 +31,11 @@ def add_account_services(email, password):
 			'created_at': account.created_at
 		}
 
-@jwt_required()
 def get_account_by_email_services(email):
-	acc = get_jwt_identity()
 	account = Account.query.filter_by(email=email).first()
-	if account and account.email == acc:
+	if account:
 		return jsonify({
+			'account_id': account.id,
 			'email': account.email,
 			'created_at': account.created_at
 		})

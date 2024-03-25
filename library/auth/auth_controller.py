@@ -1,5 +1,16 @@
 from flask import jsonify, request, Blueprint
-from .auth_services import login, register, login_by_refresh_token, refresh_token, getUserInfoByToken, get_token, logout, otp_authenticated, read, otp_required_again
+from .auth_services import (login, 
+							register, 
+							login_by_refresh_token, 
+							refresh_token, 
+							getUserInfoByToken, 
+							get_token, 
+							logout, 
+							otp_authenticated, 
+							read, 
+							otp_required_again, 
+							reset_password,
+							test_reset)
 from cryptography.fernet import Fernet
 from ..config import FERNET_KEY
 import time, base64
@@ -80,4 +91,10 @@ def read_token():
 
 @auth.route('/api/otp-required-again', methods=['POST'])
 def otp_required():
-	return otp_required_again()
+	email = request.json.get('email')
+	return otp_required_again(email)
+
+@auth.route('/api/reset-password', methods=['POST'])
+def reset_password_route():
+	email = request.json.get('email')
+	return reset_password(email)
