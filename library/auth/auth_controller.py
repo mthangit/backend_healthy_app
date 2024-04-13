@@ -14,7 +14,7 @@ from .auth_services import (login,
 from cryptography.fernet import Fernet
 from ..config import FERNET_KEY
 import time, base64
-
+from ..services.account_services import get_account_by_email_services
 
 
 
@@ -111,4 +111,9 @@ def otp_auth():
 @auth.route('/api/reset-password', methods=['POST'])
 def reset_password_route():
 	password = request.json.get('password')
+	print(password)
 	return reset_password(password)
+
+@auth.route('/api/check-token', methods=['POST'])	
+def check_token():
+	return get_token()

@@ -1,9 +1,10 @@
 from ..extension import db
 from ..library_ma import AccountSchema
-from ..model import Account
+from ..model import Account, User
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_bcrypt import generate_password_hash, check_password_hash
+from sqlalchemy import text
 
 account_schema = AccountSchema()
 accounts_schema = AccountSchema(many=True)
@@ -52,9 +53,23 @@ def authenticate(email):
 	db.session.commit()
 	return True 
 
-
 def change_password(email, password):
-	account = Account.query.filter_by(email=email).first()
-	account.password = generate_password_hash(password).decode('utf-8')
+	# account = Account.query.filter_by(email=email).first()
+	# account.password = generate_password_hash(password).decode('utf-8')
+	print(email)
+	print(password)
+	db.session.query(Account).filter(Account.email == email).update({Account.password: generate_password_hash(password).decode('utf-8')})
 	db.session.commit()
 	return True
+
+def get_info_by_email(email):
+	#join account and user table to get user info by email
+
+	sql = text("select email, username, user.account_id, created_at from account join user on account.id = user.account_id where email = :email")
+	result = db.session.execute(sql, {'email': email}).fetchone()
+	return {
+		'email': result[0],
+		'username': result[1],
+		'account_id': result[2],
+		'created_at': result[3]
+	}
