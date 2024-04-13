@@ -59,7 +59,7 @@ def authenticate():
 def refresh():
 	return refresh_token()
 
-@auth.route('/api/register', methods=['POST'])
+@auth.route('/api/signup', methods=['POST'])
 def register_route():
 	username = request.json['username']
 	email = request.json['email']

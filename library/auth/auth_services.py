@@ -176,12 +176,12 @@ def register(username, email, password):
 	if response != 0:
 		account_id = response['account_id']
 		result = add_user_services(username, account_id)
-		response['username'] = username
-		access_token = create_access_token(identity=response, expires_delta=timedelta(minutes=15))
-		refresh_token = create_refresh_token(identity=response, expires_delta=timedelta(weeks=1))
-		otp = create_otp()
-		encrypt_string = encrypt_otp_token(otp, access_token)
 		if result:
+			response['username'] = username
+			access_token = create_access_token(identity=response, expires_delta=timedelta(minutes=15))
+			refresh_token = create_refresh_token(identity=response, expires_delta=timedelta(weeks=1))
+			otp = create_otp()
+			encrypt_string = encrypt_otp_token(otp, access_token)
 			send_mail("Activate your HealthBuddy account", emails, otp, username)
 			return jsonify({
 				'message': 'Account created successfully', 
@@ -189,6 +189,7 @@ def register(username, email, password):
 					'access_token': access_token,
 					'refresh_token': refresh_token},
 				'encrypted': encrypt_string,
+				'code': '201'
 			}), 201
 		else:
 			return jsonify({'message': 'Account created successfully but failed to create user'}), 201
