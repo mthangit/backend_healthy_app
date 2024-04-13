@@ -30,3 +30,10 @@ def update_user():
 	aim = request.json.get('aim')
 	gender = request.json.get('gender')
 	return update_user_services(age, weight, height, gender, aim)
+
+
+@users.route('/api/calculate', methods=['POST'])
+def calculate():
+	a = request.json.get('a')
+	b = request.json.get('b')
+	return jsonify({'result': a + b})

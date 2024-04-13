@@ -16,7 +16,6 @@ def create_app(config_file = 'config.py'):
 		print('Database created!')
 	register_blueprint(app)
 	jwt.init_app(app)
-
 	# handling error jwt
 
 	@jwt.invalid_token_loader

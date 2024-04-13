@@ -46,26 +46,29 @@ def decrypt(encrypted):
 
 def otp_required(email, reset):
 	account = get_account_by_email_services(email)
-	username = get_username_by_account_id(account.json.get('account_id'))
-	info = {
-		'email': email,
-		'username': username,
-		'account_id': account.json.get('account_id'),
-		'created_at': account.json.get('created_at'),
-	}
-	otp = create_otp()
-	access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
-	encrypt_string = encrypt_otp_token(otp, access_token)
-	if reset == False:
-		send_mail("Activate your HealthBuddy account", [email], otp, username)
+	if not account:
+		return jsonify({'message': 'Account not found error', 'code': '404'}), 404
 	else:
-		reset_mail("Reset your HealthBuddy account password", [email], otp, username)
-	return jsonify({
-		'message': 'OTP sent to your email', 
-		'encrypted': encrypt_string, 
-		'token': {
-			'access_token': access_token}
-	}), 200
+		username = get_username_by_account_id(account.json.get('account_id'))
+		info = {
+			'email': email,
+			'username': username,
+			'account_id': account.json.get('account_id'),
+			'created_at': account.json.get('created_at'),
+		}
+		otp = create_otp()
+		access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
+		encrypt_string = encrypt_otp_token(otp, access_token)
+		if reset == False:
+			send_mail("Activate your HealthBuddy account", [email], otp, username)
+		else:
+			reset_mail("Reset your HealthBuddy account password", [email], otp, username)
+		return jsonify({
+			'message': 'OTP sent to your email', 
+			'encrypted': encrypt_string, 
+			'token': {
+				'access_token': access_token}
+		}), 200
 
 @jwt_required()
 def otp_authenticated(otp_given, encrypted):
@@ -147,8 +150,8 @@ def test_reset():
 
 def login(email, password):
 	account = get_account_by_username_and_password_services(email, password)
-	username = get_username_by_account_id(account.id)
-	if account and username:
+	if account:
+		username = get_username_by_account_id(account.id)
 		accounts = {
 			'account_id': account.id,
 			'email': account.email,
@@ -162,7 +165,7 @@ def login(email, password):
 			'token': {
 				'access_token': access_token,
 				'refresh_token': refresh_token},
-			'code': 200
+			'code': '200'
 		}), 200
 	else:
 		return jsonify({'message': 'Invalid username or password'}), 401
@@ -222,7 +225,7 @@ def login_by_refresh_token():
 	return jsonify({
 		'message': "Logged in as {} with refresh token".format(identity['username']),
 		'access_token': access_token,
-		'code': 200
+		'code': '200'
 	}), 200
 
 @jwt_required()

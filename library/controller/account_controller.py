@@ -15,7 +15,11 @@ accounts = Blueprint('accounts', __name__)
 @accounts.route('/api/check-account', methods=['GET'])
 def check_account():
 	email = request.args.get('email')
-	return jsonify({'exists': account_exists(email)})
+	result = account_exists(email)
+	if result:
+		return jsonify({'exists': 'true'}), 200
+	else:
+		return jsonify({'exists': 'false'}), 404
 
 # @accounts.route('/api/add-account', methods=['POST'])
 # def get_account():

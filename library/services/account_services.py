@@ -40,10 +40,11 @@ def get_account_by_email_services(email):
 			'created_at': account.created_at
 		})
 	else:
-		return jsonify({'message': 'Account not found'}), 404
+		return None
 	
 def account_exists(email):
-	return Account.query.filter_by(email=email).first() is not None
+	acc = Account.query.filter_by(email=email).first()
+	return True if acc else False
 
 def authenticate(email):
 	account = Account.query.filter_by(email=email).first()
