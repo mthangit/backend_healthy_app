@@ -28,13 +28,17 @@ def get_username_by_account_id(id):
 @jwt_required()
 def update_user_services(age, weight, height, gender, aim):
 	account_id = get_jwt_identity()['account_id']
-	user = User.query.filter_by(account_id=id).first()
-	user.age = age
-	user.weight = weight
-	user.height = height
-	user.aim = aim
-	user.gender = gender
-	db.session.commit()
-	return jsonify(user_schema.dump(user))
+	try:
+		user = User.query.filter_by(account_id=account_id).first()
+		user.age = age
+		user.weight = weight
+		user.height = height
+		user.aim = aim
+		user.gender = gender
+		db.session.commit()
+		return jsonify(user_schema.dump(user)), 200
+	except Exception as e:
+		db.session.rollback()
+		return jsonify({'message': 'Failed to update user'}), 500
 
 
