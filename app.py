@@ -3,9 +3,12 @@ from cryptography.fernet import Fernet
 # from .library.config import FERNET_KEY
 import time, asyncio
 import base64
+# from .library.utils.import_data import init_ingredient_data, init_dish_data, init_recipe_data
 
 
 app = create_app()
+
+# init_ingredient_data()
 
 @app.route('/', methods=['GET'])	
 def index():

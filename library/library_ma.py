@@ -7,3 +7,12 @@ class UserSchema(masrhmallow.Schema):
 class AccountSchema(masrhmallow.Schema):
 	class Meta:
 		fields = ('id', 'email', 'password', 'created_at', 'authenticated')
+
+class IngredientSchema(masrhmallow.Schema):
+	class Meta:
+		fields = ('id', 'name', 'calo', 'carb', 'fat', 'protein', 'img')
+
+class DishSchema(masrhmallow.Schema):
+	class Meta:
+		fields = ('id', 'name', 'calo', 'carb', 'fat', 'protein', 'img')
+
