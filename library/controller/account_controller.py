@@ -1,16 +1,16 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required
-from ..services.account_services import account_exists
+from ..services.account_services import account_exists, get_account_by_email_services
 from flask_bcrypt import check_password_hash, generate_password_hash
 import hashlib
 from ..config import SECRET_KEY
 accounts = Blueprint('accounts', __name__)
 
 
-# @accounts.route('/api/get-account', methods=['GET'])
-# def get_account():
-# 	email = request.args.get('email')
-# 	return get_account_by_email_services(email)
+@accounts.route('/api/get-account', methods=['GET'])
+def get_account():
+	email = request.args.get('email')
+	return get_account_by_email_services(email)
 
 @accounts.route('/api/check-account', methods=['GET'])
 def check_account():
