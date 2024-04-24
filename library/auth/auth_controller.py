@@ -25,14 +25,14 @@ fernet = Fernet(sk)
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/decrypt', methods=['POST'])
+@auth.route('/api/decrypt', methods=['POST'])
 def decrypt():
 	data = request.json.get('encrypted')
 	encrypted = data.encode()
 	decrypted = fernet.decrypt(encrypted)
 	return jsonify({'decrypted': decrypted.decode()}), 200
 
-@auth.route('/encrypt', methods=['POST'])
+@auth.route('/api/encrypt', methods=['POST'])
 def encrypt():
 	data = request.json.get('data')
 	encrypted = fernet.encrypt(data.encode())

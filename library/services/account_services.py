@@ -1,6 +1,7 @@
 from ..extension import db
 from ..library_ma import AccountSchema
-from ..model import Account, User
+from ..models.account import Account
+from ..models.user import User
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_bcrypt import generate_password_hash, check_password_hash

@@ -1,6 +1,7 @@
 from ..extension import db
 from ..library_ma import UserSchema
-from ..model import User
+# from ..model import User
+from ..models.user import User
 from flask import jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
