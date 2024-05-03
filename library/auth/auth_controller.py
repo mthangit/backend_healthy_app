@@ -117,3 +117,9 @@ def reset_password_route():
 @auth.route('/api/check-token', methods=['POST'])	
 def check_token():
 	return get_token()
+
+@auth.route('/api/user-info', methods=['GET'])  # Thêm endpoint mới để lấy thông tin user_id
+@jwt_required()  # Bảo vệ endpoint này bằng JWT, người dùng cần phải đăng nhập để truy cập
+def get_user_info():
+    user_id = get_jwt_identity()  # Lấy user_id từ token
+    return jsonify({'user_id': user_id}), 200

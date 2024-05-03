@@ -31,3 +31,7 @@ class CannotEatSchema(masrhmallow.Schema):
 class FavoriteSchema(masrhmallow.Schema):
 	class Meta:
 		fields = ('user_id', 'dish_id')
+  
+class StatisticSchema(masrhmallow.Schema):
+    class Meta:
+        fields = ('user_id', 'date', 'morning_calo', 'noon_calo', 'dinner_calo', 'snack_calo', 'exercise_calo', 'water')
