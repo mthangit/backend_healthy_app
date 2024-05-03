@@ -28,3 +28,25 @@ class User(db.Model):
 		self.username = username
 		self.account_id = account_id
 
+class Statistic(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.String(255), nullable=False)
+    morning_calo = db.Column(db.Integer)
+    noon_calo = db.Column(db.Integer)
+    dinner_calo = db.Column(db.Integer)
+    snack_calo = db.Column(db.Integer)
+    exercise_calo = db.Column(db.Integer)
+    water = db.Column(db.Integer)
+
+    user = db.relationship('User', backref=db.backref('statistics', lazy=True))
+
+    def __init__(self, user_id, date, morning_calo=None, noon_calo=None, dinner_calo=None, snack_calo=None, exercise_calo=None, water=None):
+        self.user_id = user_id
+        self.date = date
+        self.morning_calo = morning_calo
+        self.noon_calo = noon_calo
+        self.dinner_calo = dinner_calo
+        self.snack_calo = snack_calo
+        self.exercise_calo = exercise_calo
+        self.water = water
