@@ -4,6 +4,7 @@ from ..library_ma import UserSchema
 from ..models.user import User
 from flask import jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from .subscription_services import get_subscription_by_user_id_services, user_has_subscription_services
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -20,6 +21,8 @@ def add_user_services(username, account_id):
 
 def get_user_by_account_id_services(id):
 	user = User.query.filter_by(account_id=id).first()
+	if user is None:
+		return None
 	return (user_schema.dump(user))
 
 def get_username_by_account_id(id):
@@ -43,3 +46,13 @@ def update_user_services(age, weight, height, gender, aim):
 		return jsonify({'message': 'Failed to update user'}), 500
 
 
+@jwt_required()
+def get_user_services():
+	user = get_jwt_identity()
+	account_id = user['account_id']
+	data = get_user_by_account_id_services(account_id)
+	if data is None:
+		return jsonify({'message': 'User not found'}), 404
+	# Check if user has subscription
+	data['has_subscription'] = user_has_subscription_services(account_id)
+	return jsonify(data), 200

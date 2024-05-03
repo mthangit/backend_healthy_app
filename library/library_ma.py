@@ -31,3 +31,7 @@ class CannotEatSchema(masrhmallow.Schema):
 class FavoriteSchema(masrhmallow.Schema):
 	class Meta:
 		fields = ('user_id', 'dish_id')
+
+class SubscriptionSchema(masrhmallow.Schema):
+	class Meta:
+		fields = ('user_id', 'is_activate', 'start_date', 'is_paid', 'cost')

@@ -14,7 +14,7 @@ from .auth_services import (login,
 from cryptography.fernet import Fernet
 from ..config import FERNET_KEY
 import time, base64
-from ..services.account_services import get_account_by_email_services
+from ..services.account_services import get_info_by_email
 
 
 
