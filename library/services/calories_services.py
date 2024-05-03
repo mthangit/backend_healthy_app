@@ -1,7 +1,7 @@
 from ..extension import db
 from ..models.statistic import Statistic
 
-def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo, water):
+def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo):
     try:
         # Kiểm tra xem liệu dữ liệu calo cho user đã tồn tại chưa
         existing_data = Statistic.query.filter_by(user_id=user_id).first()
@@ -11,7 +11,6 @@ def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo
             existing_data.dinner_calo = dinner_calo
             existing_data.snack_calo = snack_calo
             existing_data.exercise_calo = exercise_calo
-            existing_data.water = water
         else:
             new_data = Statistic(
                 user_id=user_id,
@@ -20,7 +19,6 @@ def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo
                 dinner_calo=dinner_calo,
                 snack_calo=snack_calo,
                 exercise_calo=exercise_calo,
-                water=water
             )
             db.session.add(new_data)
         
@@ -42,7 +40,6 @@ def get_user_calories_data(user_id):
                 'dinner_calo': calories_data.dinner_calo,
                 'snack_calo': calories_data.snack_calo,
                 'exercise_calo': calories_data.exercise_calo,
-                'water': calories_data.water
             }
         else:
             return None

@@ -17,10 +17,9 @@ def save_calories():
         dinner_calo = data.get('dinner_calo')
         snack_calo = data.get('snack_calo')
         exercise_calo = data.get('exercise_calo')
-        water = data.get('water')
         
         # Lưu dữ liệu calo vào cơ sở dữ liệu
-        save_calories_data(account_id, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo, water)
+        save_calories_data(account_id, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo)
         return jsonify({'message': 'Calories data saved successfully'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500
