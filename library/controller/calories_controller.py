@@ -2,6 +2,7 @@ from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..services.calories_services import save_calories_data, get_user_calories_data
 
+
 calories = Blueprint('calories', __name__)
 
 @calories.route('/api/save-calories', methods=['POST'])

@@ -1,10 +1,13 @@
 from ..extension import db
 from ..models.statistic import Statistic
+from datetime import datetime
 
-def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo):
+def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo, date=None):
     try:
         # Kiểm tra xem liệu dữ liệu calo cho user đã tồn tại chưa
-        existing_data = Statistic.query.filter_by(user_id=user_id).first()
+        if date is None:
+            date = datetime.now().strftime('%Y-%m-%d')
+        existing_data = Statistic.query.filter_by(user_id=user_id, date=date).first()
         if existing_data:
             existing_data.morning_calo = morning_calo
             existing_data.noon_calo = noon_calo
@@ -19,6 +22,7 @@ def save_calories_data(user_id, morning_calo, noon_calo, dinner_calo, snack_calo
                 dinner_calo=dinner_calo,
                 snack_calo=snack_calo,
                 exercise_calo=exercise_calo,
+                water=0,
             )
             db.session.add(new_data)
         

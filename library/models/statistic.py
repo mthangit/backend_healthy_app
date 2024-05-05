@@ -3,7 +3,7 @@ from ..extension import db
 class Statistic(db.Model):
 	__tablename__ = 'statistic'
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-	date = db.Column(db.String(255), default=db.func.current_timestamp, primary_key=True)
+	date = db.Column(db.String(255), default=db.func.current_timestamp(), primary_key=True)
 	morning_calo = db.Column(db.Integer)
 	noon_calo = db.Column(db.Integer)
 	dinner_calo = db.Column(db.Integer)
