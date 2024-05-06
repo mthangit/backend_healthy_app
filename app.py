@@ -12,6 +12,10 @@ def index():
 	# return to a html page Hello World
 	return "Hello World!"
 
+@app.route('/test', methods=['GET'])
+def test():
+	return "Test"
+
 if __name__ == '__main__':
 	app.run(debug=True)
 	

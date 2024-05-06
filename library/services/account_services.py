@@ -65,7 +65,6 @@ def change_password(email, password):
 
 def get_info_by_email(email):
 	#join account and user table to get user info by email
-
 	sql = text("select email, username, user.account_id, created_at from account join user on account.id = user.account_id where email = :email")
 	result = db.session.execute(sql, {'email': email}).fetchone()
 	return {
@@ -73,4 +72,18 @@ def get_info_by_email(email):
 		'username': result[1],
 		'account_id': result[2],
 		'created_at': result[3]
+	}
+
+@jwt_required()
+def get_info_by_account_id():
+	account_id = get_jwt_identity()['account_id']
+	#join account and user table to get user info by account_id
+	sql = text("select email, username, user.account_id, created_at, authenticated from account join user on account.id = user.account_id where user.account_id = :account_id")
+	result = db.session.execute(sql, {'account_id': account_id}).fetchone()
+	return {
+		'email': result[0],
+		'username': result[1],
+		'account_id': result[2],
+		'created_at': result[3],
+		'authenticated': result[4]
 	}

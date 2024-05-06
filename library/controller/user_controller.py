@@ -1,5 +1,6 @@
 from flask import jsonify, request, Blueprint
-from ..services.user_services import add_user_services, update_user_services
+from ..services.user_services import add_user_services, update_user_services, get_user_services
+
 
 
 users = Blueprint('users', __name__)
@@ -37,3 +38,7 @@ def calculate():
 	a = request.json.get('a')
 	b = request.json.get('b')
 	return jsonify({'result': a + b})
+
+@users.route('/api/get-user', methods=['GET'])
+def get_user():
+	return get_user_services()
