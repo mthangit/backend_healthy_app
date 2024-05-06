@@ -14,8 +14,8 @@ from .auth_services import (login,
 from cryptography.fernet import Fernet
 from ..config import FERNET_KEY
 import time, base64
-from ..services.account_services import get_info_by_email
-
+from ..services.account_services import get_account_by_email_services, import get_info_by_email
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 key = FERNET_KEY
@@ -117,3 +117,9 @@ def reset_password_route():
 @auth.route('/api/check-token', methods=['POST'])	
 def check_token():
 	return get_token()
+
+@auth.route('/api/user-info', methods=['GET'])  # Thêm endpoint mới để lấy thông tin user_id
+@jwt_required()  # Bảo vệ endpoint này bằng JWT, người dùng cần phải đăng nhập để truy cập
+def get_user_info():
+    user_id = get_jwt_identity()  # Lấy user_id từ token
+    return jsonify({'user_id': user_id}), 200
