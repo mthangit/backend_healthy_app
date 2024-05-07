@@ -51,7 +51,7 @@ def otp_required(email, reset):
     otp = create_otp()
     mail_subject = "Activate your HealthBuddy account" if not reset else "Reset your HealthBuddy account password"
     send_mail(mail_subject, [email], otp, info['username'], reset)
-    access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
+    access_token = create_access_token(identity=info, expires_delta=timedelta(hours=1))
     encrypt_string = encrypt_otp_token(otp, access_token)
     return jsonify({
             'message': 'OTP sent to your email', 
@@ -116,7 +116,7 @@ def reset_password(password):
 	print(email)
 	change_password(email, password)
 	info = get_info_by_email(email)
-	access_token = create_access_token(identity=info, expires_delta=timedelta(minutes=15))
+	access_token = create_access_token(identity=info, expires_delta=timedelta(hours=1))
 	refresh_token = create_refresh_token(identity=info, expires_delta=timedelta(weeks=1))
 	return jsonify({
 		'message': 'Password has been changed',
@@ -141,7 +141,7 @@ def login(email, password):
 			'created_at': account.created_at,
 			'username': username
 		}
-		access_token = create_access_token(identity=accounts, expires_delta=timedelta(minutes=15))
+		access_token = create_access_token(identity=accounts, expires_delta=timedelta(hours=1))
 		refresh_token = create_refresh_token(identity=accounts, expires_delta=timedelta(weeks=1))
 		return jsonify({
 			'message': 'Logged in as {}'.format(username),
@@ -161,7 +161,7 @@ def register(username, email, password):
 		result = add_user_services(username, account_id)
 		if result:
 			response['username'] = username
-			access_token = create_access_token(identity=response, expires_delta=timedelta(minutes=15))
+			access_token = create_access_token(identity=response, expires_delta=timedelta(hours=1))
 			refresh_token = create_refresh_token(identity=response, expires_delta=timedelta(weeks=1))
 			otp = create_otp()
 			encrypt_string = encrypt_otp_token(otp, access_token)
@@ -183,7 +183,7 @@ def register(username, email, password):
 @jwt_required(refresh=True)
 def refresh_token():
 	identity = get_jwt_identity()
-	access_token = create_access_token(identity=identity, expires_delta=timedelta(minutes=15))
+	access_token = create_access_token(identity=identity, expires_delta=timedelta(hours=1))
 	return jsonify({'access_token': access_token}), 200
 
 @jwt_required()
@@ -206,7 +206,7 @@ def logout():
 @jwt_required(refresh=True)
 def login_by_refresh_token():
 	identity = get_jwt_identity()
-	access_token = create_access_token(identity=identity, expires_delta=timedelta(minutes=15))
+	access_token = create_access_token(identity=identity, expires_delta=timedelta(hours=1))
 	return jsonify({
 		'message': "Logged in as {} with refresh token".format(identity['username']),
 		'access_token': access_token,

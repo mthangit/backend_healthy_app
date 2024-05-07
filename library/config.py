@@ -4,6 +4,16 @@ import os
 load_dotenv()
 SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# SQLALCHEMY_ENGINE_OPTIONS = {
+# 	'connect_args': {
+# 		'ssl': {
+# 			'ca': os.getenv('CA_CERT'),
+# 		}
+# 	}
+# }
+
+
 JWT_PRIVATE_KEY = os.getenv('JWT_PRIVATE_KEY')
 JWT_PUBLIC_KEY = os.getenv('JWT_PUBLIC_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
