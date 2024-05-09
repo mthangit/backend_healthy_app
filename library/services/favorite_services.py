@@ -14,7 +14,7 @@ favorites_schema = FavoriteSchema(many=True)
 @jwt_required()
 def add_favorite_food(user_id, dish_id):
 	try:
-		new_favorite = Favorite(user_id=user_id, dish_id=dish_id)
+		new_favorite = Favorite(user_id=user_id, dish_id=dish_id, value=1)
 		db.session.add(new_favorite)
 		db.session.commit()
 		favorites = Favorite.query.filter_by(user_id=user_id).all()
@@ -36,7 +36,7 @@ def delete_favorite(user_id, dish_id):
 		favorite = Favorite.query.filter_by(user_id=user_id, dish_id=dish_id).first()
 		if not favorite:
 			return False
-		db.session.delete(favorite)
+		favorite.value = 0
 		db.session.commit()
 		favorites = Favorite.query.filter_by(user_id=user_id).all()
 		dish_ids = [fav.dish_id for fav in favorites]
