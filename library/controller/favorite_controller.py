@@ -24,5 +24,5 @@ def get_4_name_fav_by_user_id(user_id):
 	return get_4_name_fav_by_user_id_services(user_id)
 
 @favorites.route('/api/get-fav-list-by-user-id/<user_id>', methods=['GET'])
-def get_fav_list_by_user_id(user_id):
+def get_fav_list(user_id):
 	return get_fav_list_by_user_id(user_id)

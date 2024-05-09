@@ -42,3 +42,4 @@ def calculate():
 @users.route('/api/get-user', methods=['GET'])
 def get_user():
 	return get_user_services()
+
