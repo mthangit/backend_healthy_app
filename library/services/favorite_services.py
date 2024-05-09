@@ -2,6 +2,7 @@ from ..extension import db
 from ..library_ma import FavoriteSchema
 from ..models.favorite import Favorite
 from ..models.dish import Dish
+from ..models.user import User
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -74,9 +75,19 @@ def get_4_name_fav_by_user_id_services(user_id):
 
 @jwt_required()
 def get_fav_list_by_user_id(user_id):
-	favorites = Favorite.query.filter_by(user_id=user_id).all()
-	result = favorites_schema.dump(favorites)
+	# join dish and favorite table, get all dish information of user_id
+	favorites = Favorite.query.join(Dish, Favorite.dish_id == Dish.id).add_columns(Dish.id, Dish.name, Dish.calo, Dish.carb, Dish.fat, Dish.protein).filter(Favorite.user_id == user_id).all()	
+	result = []
+	for fav in favorites:
+		result.append({
+			'id': fav.id,
+			'name': fav.name,
+			'calo': fav.calo,
+			'carb': fav.carb,
+			'fat': fav.fat,
+			'protein': fav.protein
+		})
 	return jsonify({
 		'favorites': result,
 		'message': 'success'
-	}), 200
+	}), 200	
