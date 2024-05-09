@@ -1,33 +1,77 @@
 from ..extension import db
 from ..models.statistic import Statistic
+from ..models.account import Account
 from datetime import datetime
 
-def save_calories_data(user_id, date, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo):
-    try:
-        # Kiểm tra xem liệu dữ liệu calo cho user đã tồn tại chưa
-        if date is None:
-            date = datetime.now().strftime('%Y-%m-%d')
-        existing_data = Statistic.query.filter_by(user_id=user_id, date=date).first()
-        if existing_data:
-            existing_data.morning_calo = morning_calo        
-            existing_data.noon_calo = noon_calo
-            existing_data.dinner_calo = dinner_calo
-            existing_data.snack_calo = snack_calo
-            existing_data.exercise_calo = exercise_calo
-        else:
-            new_data = Statistic(
-                user_id=user_id,
-                date=date,
-                morning_calo=morning_calo,
-                noon_calo=noon_calo,
-                dinner_calo=dinner_calo,
-                snack_calo=snack_calo,
-                exercise_calo=exercise_calo,
-                water=0,
-            )
-            db.session.add(new_data)
-        
-        db.session.commit()
+def save_calories_morning(user_id,morning_calo):
+    try: 
+        user_account = Account.query.filter_by(id = user_id).first()
+        if user_account:
+            new_morning_calo = morning_calo
+            new_statistic = Statistic(user_id = user_id)
+            new_statistic.morning_calo = new_morning_calo
+            db.session.add(new_statistic)
+            db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(str(e))
+        return False
+
+def save_calories_noon(user_id,noon_calo):
+    try: 
+        user_account = Account.query.filter_by(id = user_id).first()
+        if user_account:
+            new_noon_calo = noon_calo
+            new_statistic = Statistic(user_id = user_id)
+            new_statistic.noon_calo = new_noon_calo
+            db.session.add(new_statistic)
+            db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(str(e))
+        return False
+
+def save_calories_dinner(user_id,dinner_calo):
+    try: 
+        user_account = Account.query.filter_by(id = user_id).first()
+        if user_account:
+            new_dinner_calo = dinner_calo
+            new_statistic = Statistic(user_id = user_id)
+            new_statistic.dinner_calo = new_dinner_calo
+            db.session.add(new_statistic)
+            db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(str(e))
+        return False
+    
+def save_calories_snack(user_id,snack_calo):
+    try: 
+        user_account = Account.query.filter_by(id = user_id).first()
+        if user_account:
+            new_snack_calo = snack_calo
+            new_statistic = Statistic(user_id = user_id)
+            new_statistic.snack_calo = new_snack_calo
+            db.session.add(new_statistic)
+            db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(str(e))
+        return False
+    
+def save_calories_exercise(user_id,exercise_calo):
+    try: 
+        user_account = Account.query.filter_by(id = user_id).first()
+        if user_account:
+            new_exercise_calo = exercise_calo
+            new_statistic = Statistic(user_id = user_id)
+            new_statistic.exercise_calo = new_exercise_calo
+            db.session.add(new_statistic)
+            db.session.commit()
         return True
     except Exception as e:
         db.session.rollback()
