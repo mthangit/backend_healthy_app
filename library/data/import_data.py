@@ -21,6 +21,7 @@ def init_data():
 	# init_dish_data()
 	# update_dish_data()
 	# init_recipe_data()
+	init_favorite_data_2()
 	return jsonify({'message': 'Data initialized'}), 200
 
 @data.route('/api/update-ingredient', methods=['GET'])
@@ -59,8 +60,6 @@ def update_canxi_ingredient():
         if ingredient:
               ingredient.canxi = row[6]
     db.session.commit()
-
-
 
 def init_dish_data():
 	print('Initializing dish data')
@@ -154,7 +153,21 @@ def init_favorite_data():
 	for index, row in df.iterrows():
 		favorite = Favorite(
 			user_id=row[0],
-			dish_id=row[1]
+			dish_id=row[1],
+			value=1
+		)
+		db.session.add(favorite)
+	db.session.commit()
+
+
+def init_favorite_data_2():
+	print('Initializing favorite data')
+	df = pd.read_csv('unfavorite_data_unique.csv')
+	for index, row in df.iterrows():
+		favorite = Favorite(
+			user_id=row[0],
+			dish_id=row[1],
+			value=0
 		)
 		db.session.add(favorite)
 	db.session.commit()
