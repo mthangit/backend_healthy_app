@@ -69,7 +69,7 @@ def get_favorite_by_user_id_services(user_id):
 
 @jwt_required()
 def get_4_name_fav_by_user_id_services(user_id):
-	favorites = Favorite.query.filter_by(user_id=user_id).limit(4).all()
+	favorites = Favorite.query.filter_by(user_id=user_id, value=1).limit(4).all()
 	dish_ids = [fav.dish_id for fav in favorites]
 	result = [Dish.query.get(dish_id).name for dish_id in dish_ids]
 	return jsonify({
