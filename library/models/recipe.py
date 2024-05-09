@@ -8,7 +8,6 @@ class Recipe(db.Model):
     ingredient_id = db.Column(db.Integer, ForeignKey('ingredient.id'), primary_key=True)
     dish_id = db.Column(db.Integer, ForeignKey('dish.id'), primary_key=True)
     unit = db.Column(db.Float)
-    grams = db.Column(db.Float)
 
     def __init__(self, ingredient_id, dish_id, unit):
         self.ingredient_id = ingredient_id
@@ -49,10 +48,10 @@ class Recipe(db.Model):
                 'name': detail_ingr.name,
                 'unit': self.unit,
                 'grams': round(grams, 2),
-                'kcal': round(grams*detail_ingr.kcal/100, 2),
+                'calo': round(grams*detail_ingr.calo/100, 2),
                 'protein': round(grams*detail_ingr.protein/100, 2),
-                'lipid': round(grams*detail_ingr.lipid/100, 2),
-                'glucid': round(grams*detail_ingr.glucid/100, 2),
+                'fat': round(grams*detail_ingr.fat/100, 2),
+                'carb': round(grams*detail_ingr.carb/100, 2),
                 'canxi': round(grams*detail_ingr.canxi/100, 2),
                 'category': detail_ingr.category
             }
