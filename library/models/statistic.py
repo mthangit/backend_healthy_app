@@ -1,9 +1,10 @@
 from ..extension import db
+from datetime import datetime
 
 class Statistic(db.Model):
     __tablename__ = 'statistic'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    date = db.Column(db.Date, primary_key=True)
+    date = db.Column(db.DateTime, default=datetime.utcnow, primary_key=True)
     morning_calo = db.Column(db.Integer)
     noon_calo = db.Column(db.Integer)
     dinner_calo = db.Column(db.Integer)
@@ -11,15 +12,14 @@ class Statistic(db.Model):
     exercise_calo = db.Column(db.Integer)
     water = db.Column(db.Integer)
 
-    def __init__(self, user_id, date, morning_calo, noon_calo, dinner_calo, snack_calo, exercise_calo, water):
+    def __init__(self, user_id):
         self.user_id = user_id
-        self.date = date
-        self.morning_calo = morning_calo
-        self.noon_calo = noon_calo
-        self.dinner_calo = dinner_calo
-        self.snack_calo = snack_calo
-        self.exercise_calo = exercise_calo
-        self.water = water
+        self.morning_calo = 0
+        self.noon_calo = 0
+        self.dinner_calo = 0
+        self.snack_calo = 0
+        self.exercise_calo = 0
+        self.water = 0
 
     def get_user_statistic_details(self):
         user_details = {
