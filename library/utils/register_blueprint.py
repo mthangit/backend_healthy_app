@@ -9,6 +9,7 @@ from ..mail.mail_controller import mail
 from ..controller.dish_controller import dishes
 from ..controller.recipe_controller import recipes
 from ..controller.favorite_controller import favorites
+from ..controller.menu_controller import menus
 from ..data.import_data import data
 
 def register_blueprint(app):
@@ -24,3 +25,4 @@ def register_blueprint(app):
 	app.register_blueprint(ingredients)
 	app.register_blueprint(recipes)
 	app.register_blueprint(favorites)
+	app.register_blueprint(menus)
