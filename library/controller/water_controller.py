@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ..services.water_services import save_water
+from ..services.water_services import save_water, get_user_water_data
 
 water = Blueprint('water', __name__)
 
@@ -17,3 +17,17 @@ def save_data_water():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
+@water.route('/api/statistic/get-user-water', methods=['GET'])
+@jwt_required()
+def get_user_water():
+    try:
+        account_id = get_jwt_identity()['account_id']
+        if not account_id:
+            return jsonify({'message': 'No user_id provided'}), 400
+        water_data = get_user_water_data(account_id)
+        if water_data:
+            return jsonify(water_data), 200
+        else:
+            return jsonify({'message': 'No water_data found for this user'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500

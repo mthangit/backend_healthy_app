@@ -6,7 +6,7 @@ import random
 from ..models.dish import Dish
 from ..models.recipe import Recipe
 from ..models.ingredient import Ingredient
-from library_ma import DishSchema, RecipeSchema, IngredientSchema
+# from library_ma import DishSchema, RecipeSchema, IngredientSchema
 from .menu_individual import MenuIndividual
 from ..extension import db, masrhmallow
 import numpy as np
@@ -21,7 +21,6 @@ class GeneticAlgorithm:
         self.mutation_rate = mutation_rate
         self.generation = generation
         self.population = self.initialize_population()
-        self.generation = generation
 
     def initialize_population(self):
         return [MenuIndividual(self.uid) for _ in range(self.population_size)]

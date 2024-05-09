@@ -16,7 +16,8 @@ from ..models.cannot_eat import CannotEat
 from ..models.favorite import Favorite
 from ..models.disease import Disease
 
-from library_ma import DishSchema, RecipeSchema, IngredientSchema, UserSchema, CannotEatSchema, FavoriteSchema
+
+# from library_ma import DishSchema, RecipeSchema, IngredientSchema, UserSchema, CannotEatSchema, FavoriteSchema
 from ..extension import db, masrhmallow
 
 class MenuIndividual:
@@ -29,9 +30,11 @@ class MenuIndividual:
             self.menu = [self.random_dish() for _ in range(self.NUM_GENES)]
         else:
             self.menu = list_dish
-
         self.fitness = self.calculate_fitness_score()
 
+    def get_menu(self):
+        return self.menu
+    
     def get_fitness(self):
         return self.fitness
 
@@ -93,42 +96,42 @@ class MenuIndividual:
 
     def calculate_VHEI_calo_score(self):
         vegetable_unit = fruit_unit = grain_unit = protein_unit = fat_n_oil_unit = 0
-        dairy_unit = sugar_unit = salt_n_sauce_unit = total_kcal = 0
+        dairy_unit = sugar_unit = salt_n_sauce_unit = total_calo = 0
         for dish in self.menu:
             result = (
-                db.session.query(Dish.id, Recipe.unit, Ingredient.kcal, Ingredient.glucid,
-                                Ingredient.protein, Ingredient.canxi, Ingredient.lipid,
+                db.session.query(Dish.id, Recipe.unit, Ingredient.calo, Ingredient.carb,
+                                Ingredient.protein, Ingredient.canxi, Ingredient.fat,
                                 Ingredient.category)
                 .join(Recipe, Dish.id == Recipe.dish_id)
                 .join(Ingredient, Ingredient.id == Recipe.ingredient_id)
                 .filter(Dish.id == dish.get_id())
                 .all()
             )
-            for dish_id, unit, kcal, glucid, protein, canxi, lipid, category in result:
+            for dish_id, unit, calo, carb, protein, canxi, fat, category in result:
                 if category == 'Vegetables':
                     vegetable_unit += unit
-                    total_kcal += round(80*unit*kcal/100, 2)
+                    total_calo += round(80*unit*calo/100, 2)
                 elif category == 'Fruits':
                     fruit_unit += unit
-                    total_kcal += round(80*unit*kcal/100, 2)
+                    total_calo += round(80*unit*calo/100, 2)
                 elif category == 'Grains':
                     grain_unit += unit
-                    total_kcal += round((100*unit*20/glucid)*kcal/100, 2)
+                    total_calo += round((100*unit*20/carb)*calo/100, 2)
                 elif category == 'Protein':
                     protein_unit += unit
-                    total_kcal += round((100*unit*7/protein)*kcal/100, 2)
+                    total_calo += round((100*unit*7/protein)*calo/100, 2)
                 elif category == 'Fats and oils':
                     fat_n_oil_unit += unit
-                    total_kcal += round((100*unit*5/lipid)*kcal/100, 2)
+                    total_calo += round((100*unit*5/fat)*calo/100, 2)
                 elif category == 'Dairy':
                     dairy_unit += unit
-                    total_kcal += round((100*unit*100/canxi)*kcal/100, 2)
+                    total_calo += round((100*unit*100/canxi)*calo/100, 2)
                 elif category == 'Sugar':
                     sugar_unit += unit
-                    total_kcal += round((5*unit)*kcal/100, 2)
+                    total_calo += round((5*unit)*calo/100, 2)
                 elif category == 'Salt and sauces':
                     salt_n_sauce_unit += unit
-                    total_kcal += round((1*unit)*kcal/100, 2)
+                    total_calo += round((1*unit)*calo/100, 2)
 
         vegetable_score = 10 * vegetable_unit / 3 if vegetable_unit < 3 else 10
         fruit_score = 10 * fruit_unit / 3 if fruit_unit < 3 else 10
@@ -168,9 +171,9 @@ class MenuIndividual:
             user_tdee = user.calculate_tdee()
             user_aim = user.get_aim()
             if user_aim == 'Tăng cân':
-                aim_score = 100 * (total_kcal / user_tdee)
+                aim_score = 100 * (total_calo / user_tdee)
             else:
-                aim_score = 100 - ((100 * (total_kcal - user_tdee)) / user_tdee)
+                aim_score = 100 - ((100 * (total_calo - user_tdee)) / user_tdee)
 
         return  aim_score + total_VHEI_score
 
@@ -209,7 +212,6 @@ class MenuIndividual:
         VHEI_calo_score = self.calculate_VHEI_calo_score()
         health_problem_score = self.calculate_health_problem_score()
         calculate_favorite_score = self.calculate_favorite_score()
-        print(calculate_favorite_score)
         return food_diversity_score+VHEI_calo_score+food_group_diversity_score+health_problem_score+calculate_favorite_score
 
   
