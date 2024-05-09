@@ -77,17 +77,10 @@ def save_data_calories_exercise():
 @calories.route('/api/statistic/get-user-calories', methods=['GET'])
 @jwt_required()
 def get_user_calories():
-    try:
         account_id = get_jwt_identity()['account_id']
+        print(account_id)
         if not account_id:
             return jsonify({'message': 'No user_id provided'}), 400
-        calories_data = get_user_calories_data(account_id)
-        print(calories_data)
-        if calories_data:
-            return jsonify(calories_data), 200
-        else:
-            return jsonify({'message': 'No calories data found for this user'}), 404
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
+        return get_user_calories_data(account_id)
     
     

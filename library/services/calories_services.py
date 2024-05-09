@@ -23,8 +23,10 @@ def save_calories_noon(user_id,noon_calo):
     try: 
         user_account = Account.query.filter_by(id = user_id).first()
         if user_account:
+            print(user_id,noon_calo)
             new_noon_calo = noon_calo
             new_statistic = Statistic(user_id = user_id)
+            print(new_statistic)
             new_statistic.noon_calo = new_noon_calo
             db.session.add(new_statistic)
             db.session.commit()
@@ -82,6 +84,7 @@ def save_calories_exercise(user_id,exercise_calo):
 def get_user_calories_data(user_id):
     try:
         calories_data = Statistic.query.filter_by(user_id=user_id).first()
+        print(calories_data)
         if calories_data:
             current_date = datetime.now().date()
             day, month, year = current_date.day, current_date.month, current_date.year
@@ -110,9 +113,9 @@ def get_user_calories_data(user_id):
                 "total_snack_calo": sum([item.snack_calo for item in user_statistic]),
                 "total_exercise_calo": sum([item.exercise_calo for item in user_statistic])
             }
-            # print(results)
             return results
         else:
+            print("No data found")
             return jsonify({'message': 'No data found'}), 404
     except Exception as e:
         print(str(e))
