@@ -2,6 +2,7 @@ from ..extension import db
 from ..library_ma import FavoriteSchema
 from ..models.favorite import Favorite
 from ..models.dish import Dish
+from ..models.user import User
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -13,8 +14,12 @@ favorites_schema = FavoriteSchema(many=True)
 @jwt_required()
 def add_favorite_food(user_id, dish_id):
 	try:
-		new_favorite = Favorite(user_id=user_id, dish_id=dish_id)
-		db.session.add(new_favorite)
+		favorite = Favorite.query.filter_by(user_id=user_id, dish_id=dish_id).first()
+		if favorite:
+			favorite.value = 1
+		else:
+			new_favorite = Favorite(user_id=user_id, dish_id=dish_id, value=1)
+			db.session.add(new_favorite)
 		db.session.commit()
 		favorites = Favorite.query.filter_by(user_id=user_id).all()
 		dish_ids = [fav.dish_id for fav in favorites]
@@ -35,7 +40,7 @@ def delete_favorite(user_id, dish_id):
 		favorite = Favorite.query.filter_by(user_id=user_id, dish_id=dish_id).first()
 		if not favorite:
 			return False
-		db.session.delete(favorite)
+		favorite.value = 0
 		db.session.commit()
 		favorites = Favorite.query.filter_by(user_id=user_id).all()
 		dish_ids = [fav.dish_id for fav in favorites]
@@ -53,7 +58,7 @@ def delete_favorite(user_id, dish_id):
 
 @jwt_required()
 def get_favorite_by_user_id_services(user_id):
-	favorites = Favorite.query.filter_by(user_id=user_id).all()
+	favorites = Favorite.query.filter_by(user_id=user_id, value=1).all()
 	dish_ids = [fav.dish_id for fav in favorites]
 	result = [dish_id for dish_id in dish_ids]
 	return jsonify({
@@ -64,7 +69,7 @@ def get_favorite_by_user_id_services(user_id):
 
 @jwt_required()
 def get_4_name_fav_by_user_id_services(user_id):
-	favorites = Favorite.query.filter_by(user_id=user_id).limit(4).all()
+	favorites = Favorite.query.filter_by(user_id=user_id, value=1).limit(4).all()
 	dish_ids = [fav.dish_id for fav in favorites]
 	result = [Dish.query.get(dish_id).name for dish_id in dish_ids]
 	return jsonify({
@@ -74,9 +79,19 @@ def get_4_name_fav_by_user_id_services(user_id):
 
 @jwt_required()
 def get_fav_list_by_user_id(user_id):
-	favorites = Favorite.query.filter_by(user_id=user_id).all()
-	result = favorites_schema.dump(favorites)
+	# join dish and favorite table, get all dish information of user_id
+	favorites = Favorite.query.join(Dish, Favorite.dish_id == Dish.id).add_columns(Dish.id, Dish.name, Dish.calo, Dish.carb, Dish.fat, Dish.protein).filter(Favorite.user_id == user_id, Favorite.value == 1).all()	
+	result = []
+	for fav in favorites:
+		result.append({
+			'id': fav.id,
+			'name': fav.name,
+			'calo': fav.calo,
+			'carb': fav.carb,
+			'fat': fav.fat,
+			'protein': fav.protein
+		})
 	return jsonify({
 		'favorites': result,
 		'message': 'success'
-	}), 200
+	}), 200	

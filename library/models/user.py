@@ -14,16 +14,10 @@ class User(db.Model):
 	is_deleted = db.Column(db.Boolean, default=False)
 	account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=True)
 	
-	def __init__(self, username, age, height, weight, gender, exercise, aim, disease_id):
+	def __init__(self, username, account_id):
 		self.username = username
-		self.age = age
-		self.height = height
-		self.weight = weight
-		self.gender = gender
-		self.exercise = exercise
-		self.aim = aim
-		self.disease_id = disease_id
-
+    self.account_id = account_id
+    
 	def __repr__(self):
 		return f'<User {self.username}>'
 
