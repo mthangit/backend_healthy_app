@@ -116,7 +116,7 @@ def reset_password(password):
 	print(email)
 	change_password(email, password)
 	info = get_info_by_email(email)
-	access_token = create_access_token(identity=info, expires_delta=timedelta(hours=1))
+	access_token = create_access_token(identity=info, expires_delta=timedelta(hours=3))
 	refresh_token = create_refresh_token(identity=info, expires_delta=timedelta(weeks=1))
 	return jsonify({
 		'message': 'Password has been changed',
@@ -141,7 +141,7 @@ def login(email, password):
 			'created_at': account.created_at,
 			'username': username
 		}
-		access_token = create_access_token(identity=accounts, expires_delta=timedelta(hours=1))
+		access_token = create_access_token(identity=accounts, expires_delta=timedelta(hours=3))
 		refresh_token = create_refresh_token(identity=accounts, expires_delta=timedelta(weeks=1))
 		return jsonify({
 			'message': 'Logged in as {}'.format(username),
@@ -161,7 +161,7 @@ def register(username, email, password):
 		result = add_user_services(username, account_id)
 		if result:
 			response['username'] = username
-			access_token = create_access_token(identity=response, expires_delta=timedelta(hours=1))
+			access_token = create_access_token(identity=response, expires_delta=timedelta(hours=3))
 			refresh_token = create_refresh_token(identity=response, expires_delta=timedelta(weeks=1))
 			otp = create_otp()
 			encrypt_string = encrypt_otp_token(otp, access_token)

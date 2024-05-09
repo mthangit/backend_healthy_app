@@ -14,8 +14,12 @@ favorites_schema = FavoriteSchema(many=True)
 @jwt_required()
 def add_favorite_food(user_id, dish_id):
 	try:
-		new_favorite = Favorite(user_id=user_id, dish_id=dish_id, value=1)
-		db.session.add(new_favorite)
+		favorite = Favorite.query.filter_by(user_id=user_id, dish_id=dish_id).first()
+		if favorite:
+			favorite.value = 1
+		else:
+			new_favorite = Favorite(user_id=user_id, dish_id=dish_id, value=1)
+			db.session.add(new_favorite)
 		db.session.commit()
 		favorites = Favorite.query.filter_by(user_id=user_id).all()
 		dish_ids = [fav.dish_id for fav in favorites]
@@ -76,7 +80,7 @@ def get_4_name_fav_by_user_id_services(user_id):
 @jwt_required()
 def get_fav_list_by_user_id(user_id):
 	# join dish and favorite table, get all dish information of user_id
-	favorites = Favorite.query.join(Dish, Favorite.dish_id == Dish.id).add_columns(Dish.id, Dish.name, Dish.calo, Dish.carb, Dish.fat, Dish.protein).filter(Favorite.user_id == user_id).all()	
+	favorites = Favorite.query.join(Dish, Favorite.dish_id == Dish.id).add_columns(Dish.id, Dish.name, Dish.calo, Dish.carb, Dish.fat, Dish.protein).filter(Favorite.user_id == user_id, Favorite.value == 1).all()	
 	result = []
 	for fav in favorites:
 		result.append({
