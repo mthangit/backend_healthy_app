@@ -54,7 +54,7 @@ def delete_favorite(user_id, dish_id):
 
 @jwt_required()
 def get_favorite_by_user_id_services(user_id):
-	favorites = Favorite.query.filter_by(user_id=user_id).all()
+	favorites = Favorite.query.filter_by(user_id=user_id, value=1).all()
 	dish_ids = [fav.dish_id for fav in favorites]
 	result = [dish_id for dish_id in dish_ids]
 	return jsonify({
