@@ -1,20 +1,16 @@
 from ..extension import db
 from ..models.statistic import Statistic
+from ..models.account import Account
 
-def save_water_data(user_id, water):
-    try:
-        # Kiểm tra xem liệu dữ liệu water cho user đã tồn tại chưa
-        existing_data = Statistic.query.filter_by(user_id=user_id).first()
-        if existing_data:
-            existing_data.water = water
-        else:
-            new_data = Statistic(
-                user_id=user_id,
-                water=water,
-            )
-            db.session.add(new_data)
-        
-        db.session.commit()
+def save_water(user_id,water):
+    try: 
+        user_account = Account.query.filter_by(id = user_id).first()
+        if user_account:
+            new_water = water
+            new_statistic = Statistic(user_id = user_id)
+            new_statistic.water = new_water
+            db.session.add(new_statistic)
+            db.session.commit()
         return True
     except Exception as e:
         db.session.rollback()
