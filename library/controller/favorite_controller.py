@@ -1,7 +1,6 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required
-from ..services.favorite_services import add_favorite_food, delete_favorite, get_favorite_by_user_id_services, get_4_name_fav_by_user_id_services
-
+from ..services.favorite_services import add_favorite_food, delete_favorite, get_favorite_by_user_id_services, get_4_name_fav_by_user_id_services, get_fav_list_by_user_id
 favorites = Blueprint('favorite', __name__)
 
 @favorites.route('/api/change-favorite', methods=['POST'])
@@ -23,3 +22,7 @@ def get_favorite_by_user_id(user_id):
 @favorites.route('/api/get-home-fav/<user_id>', methods=['GET'])
 def get_4_name_fav_by_user_id(user_id):
 	return get_4_name_fav_by_user_id_services(user_id)
+
+@favorites.route('/api/get-fav-list-by-user-id/<user_id>', methods=['GET'])
+def get_fav_list_by_user_id(user_id):
+	return get_fav_list_by_user_id(user_id)

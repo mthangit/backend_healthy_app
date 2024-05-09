@@ -71,3 +71,12 @@ def get_4_name_fav_by_user_id_services(user_id):
 		'favorites': result,
 		'message': 'success'
 	}), 200
+
+@jwt_required()
+def get_fav_list_by_user_id(user_id):
+	favorites = Favorite.query.filter_by(user_id=user_id).all()
+	result = favorites_schema.dump(favorites)
+	return jsonify({
+		'favorites': result,
+		'message': 'success'
+	}), 200
