@@ -7,6 +7,7 @@ from ..models.disease import Disease
 from ..models.cannot_eat import CannotEat
 from ..models.user import User
 from ..models.favorite import Favorite
+from ..models.account import Account
 from ..extension import db
 import pandas as pd
 from flask import jsonify, request, Blueprint
@@ -16,12 +17,12 @@ data = Blueprint('data', __name__)
 
 @data.route('/api/init-data', methods=['GET'])
 def init_data():
-	init_favorite_data()
+	# init_favorite_data()
 	# init_ingredient_data()
 	# init_dish_data()
 	# update_dish_data()
 	# init_recipe_data()
-	init_favorite_data_2()
+	init_account_data()
 	return jsonify({'message': 'Data initialized'}), 200
 
 @data.route('/api/update-ingredient', methods=['GET'])
@@ -170,4 +171,15 @@ def init_favorite_data_2():
 			value=0
 		)
 		db.session.add(favorite)
+	db.session.commit()
+
+def init_account_data():
+	print('Initializing account data')
+	df = pd.read_csv('account_data.csv')
+	for index, row in df.iterrows():
+		account = Account(
+			email=row[1],
+			password=row[2]
+		)
+		db.session.add(account)
 	db.session.commit()

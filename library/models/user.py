@@ -16,8 +16,8 @@ class User(db.Model):
 	
 	def __init__(self, username, account_id):
 		self.username = username
-    self.account_id = account_id
-    
+		self.account_id = account_id    
+		
 	def __repr__(self):
 		return f'<User {self.username}>'
 

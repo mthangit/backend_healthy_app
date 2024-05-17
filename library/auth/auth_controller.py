@@ -104,6 +104,7 @@ def otp_reset_password():
 @auth.route('/api/otp-authenticated-account', methods=['POST'])
 def otp_auth():
 	otp = request.json.get('otp')
+	print(type(otp))
 	encrypted = request.json.get('encrypted')
 	return authenticated_account(otp, encrypted)
 

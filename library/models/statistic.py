@@ -4,7 +4,9 @@ from datetime import datetime
 class Statistic(db.Model):
     __tablename__ = 'statistic'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    date = db.Column(db.DateTime, default=datetime.utcnow, primary_key=True)
+    # date = db.Column(db.DateTime, default=datetime.utcnow, primary_key=True)
+    # date = db.Column(db.DateTime, default=datetime.now(), primary_key=True)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp(), primary_key=True)
     morning_calo = db.Column(db.Integer)
     noon_calo = db.Column(db.Integer)
     dinner_calo = db.Column(db.Integer)
