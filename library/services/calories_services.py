@@ -120,3 +120,5 @@ def get_user_calories_data(user_id):
     except Exception as e:
         print(str(e))
         return jsonify({'message': str(e)}), 500
+
+
