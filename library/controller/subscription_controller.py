@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint, redirect
+from flask import jsonify, request, Blueprint, redirect, Response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..services.subscription_services import add_subscription_services, get_subscription_by_user_id_services, user_has_subscription_services, update_subscription_services
 import time
@@ -121,8 +121,11 @@ def confirm_payment():
 def ipn_momo():
     data = request.json
     code = data['resultCode']
+    orderId = data['orderId']
     if(code == 0):
-        return 204
+        update_subscription_services(orderId)
+        # RETURN CODE 204
+        return Response(status=204)
     return jsonify({
         "Payment Failed"
 	}), 400
