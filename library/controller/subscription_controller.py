@@ -116,10 +116,13 @@ def confirm_payment():
 		# Thanh toán thành công
         return jsonify({'message': 'Payment confirmed'})
 
+
 @subscriptions.route('/ipn_momo', methods=['POST'])
 def ipn_momo():
-	data = request.json
-	if (data['resultCode'] == 0):
-		return update_subscription_services(data['orderId'])
-	else:
-		return jsonify({'message': 'Payment failed'}), 400
+    data = request.json
+    code = data['resultCode']
+    if(code == 0):
+        return 204
+    return jsonify({
+        "Payment Failed"
+	}), 400
