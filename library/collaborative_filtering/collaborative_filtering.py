@@ -78,14 +78,8 @@ class CollaborativeFiltering:
             for item in row:
                 if item >= 0:
                     total += item
-                    num_items += 1
-                    print("f:", num_items)
-            if num_items > 0:  # Kiểm tra để tránh chia cho 0
-                ave = total / num_items
-                print("ave:", ave)
-            else:
-                ave = 0  # Hoặc xử lý khi không có phần tử hợp lệ
-                print("ave11111111111:", ave)
+                num_items += 1   
+            ave = total / num_items
             row_averages.append(ave)
         self.user_average=row_averages
         return user_item_matrix
