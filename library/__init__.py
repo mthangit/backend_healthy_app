@@ -51,5 +51,4 @@ def create_app(config_file = 'config.py'):
 			),
 			401,
 		)
-
 	return app
