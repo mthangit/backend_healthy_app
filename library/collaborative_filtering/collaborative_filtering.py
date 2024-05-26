@@ -78,14 +78,8 @@ class CollaborativeFiltering:
             for item in row:
                 if item >= 0:
                     total += item
-                    num_items += 1
-                    print("f:", num_items)
-            if num_items > 0:  # Kiểm tra để tránh chia cho 0
-                ave = total / num_items
-                print("ave:", ave)
-            else:
-                ave = 0  # Hoặc xử lý khi không có phần tử hợp lệ
-                print("ave11111111111:", ave)
+                num_items += 1
+            ave = total / num_items
             row_averages.append(ave)
         self.user_average=row_averages
         return user_item_matrix
@@ -101,7 +95,6 @@ class CollaborativeFiltering:
             predicted_clusters = kmeans.predict(self.dim_reduced_matrix)
             silhouette_avg.append(silhouette_score(self.dim_reduced_matrix, predicted_clusters))        
         max_score = np.argmax(silhouette_avg)
-        print('k', range_k[max_score])
         return range_k[max_score]
 
     def run_kmeans(self):
@@ -109,8 +102,6 @@ class CollaborativeFiltering:
         kmeans = KMeans(n_clusters=n, random_state=40, n_init=10)
         kmeans.fit(self.dim_reduced_matrix)
         self.label_cluster = kmeans.labels_
-        print('label_cluster', self.label_cluster)
-        print('m_dish_id', len(self.m_dish_id))
         for index, value in enumerate(self.n_user_id):
             if value == self.uid:
                 indices = index
@@ -163,9 +154,6 @@ class CollaborativeFiltering:
                 list_weight.append(weight)
             sorted_data = sorted(list(zip(item_indices, list_weight)), key=lambda x: x[1], reverse=True) 
             sorted_indices_recommend = [item[0] for item in sorted_data]
-            print(item_indices)
-            print(list_weight)
-            print(sorted_indices_recommend)
             recommended_dishes = [self.m_dish_id[i] for i in sorted_indices_recommend]
             return recommended_dishes
         else: 
@@ -180,5 +168,4 @@ class CollaborativeFiltering:
             dish_row_sum_pairs = list(zip(self.m_dish_id, row_sum))
             sorted_dish_row_sum_pairs = sorted(dish_row_sum_pairs, key=lambda x: x[1], reverse=True)
             recommended_dishes = [pair[0] for pair in sorted_dish_row_sum_pairs]
-            print(recommended_dishes)
             return recommended_dishes
