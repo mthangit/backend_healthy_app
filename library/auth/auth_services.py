@@ -77,6 +77,7 @@ def otp_authenticated(otp_given, encrypted):
 			email_from_token = user['email']
 			email_from_token_given = decode_token(token)['sub']['email']
 			if email_from_token == email_from_token_given:
+				authenticate(email_from_token)
 				# return jsonify({'message': 'OTP is valid', 'code': "200", "status": "successfully"}), 200
 				return True
 			else:

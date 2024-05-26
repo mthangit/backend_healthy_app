@@ -95,6 +95,14 @@ def otp():
 		resetpass = False
 	return otp_required(email, resetpass)
 
+@auth.route('/api/otp-required-again', methods=['POST'])
+@jwt_required()
+def otp_again():
+	user = get_jwt_identity()
+	email = user['email']
+	return otp_required(email, False)
+
+
 @auth.route('/api/otp-reset-password', methods=['POST'])
 def otp_reset_password():
 	otp = request.json.get('otp')
