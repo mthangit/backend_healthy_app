@@ -9,3 +9,9 @@ class Favorite(db.Model):
 		self.user_id = user_id
 		self.dish_id = dish_id
 		self.value = value
+
+	def __repr__(self):
+		return f'<Favorite {self.user_id} {self.dish_id} {self.value}>'
+
+	def get_value(self):
+        	return self.value
