@@ -54,5 +54,11 @@ def get_user_services():
 	if data is None:
 		return jsonify({'message': 'User not found'}), 404
 	# Check if user has subscription
-	data['has_subscription'] = user_has_subscription_services(account_id)
+	result = user_has_subscription_services(account_id)
+	if result != False:
+		data['has_subscription'] = True
+		data['expired_date'] = result['expired_date']
+	else:
+		data['has_subscription'] = False
+		data['expired_date'] = None
 	return jsonify(data), 200
