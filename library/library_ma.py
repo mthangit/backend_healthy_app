@@ -36,4 +36,4 @@ class StatisticSchema(masrhmallow.Schema):
         fields = ('user_id', 'date', 'morning_calo', 'noon_calo', 'dinner_calo', 'snack_calo', 'exercise_calo', 'water')
 class SubscriptionSchema(masrhmallow.Schema):
 	class Meta:
-		fields = ('user_id', 'is_activate', 'start_date', 'is_paid', 'cost')
+		fields = ('user_id', 'subscription_id' ,'is_activate', 'start_date', 'is_paid', 'cost', 'payment_date', 'subscription_type', 'expired_date')

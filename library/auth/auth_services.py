@@ -68,6 +68,7 @@ def otp_authenticated(otp_given, encrypted):
 		# return jsonify({'message': 'OTP is expired'}), 401
 		return False
 	else:
+		otp = str(otp)
 		otpIsValid = otp == otp_given
 		if not otpIsValid:
 			# return jsonify({'message': 'Invalid OTP'}), 401

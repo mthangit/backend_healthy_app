@@ -46,14 +46,6 @@ class Dish(db.Model):
                 total_glucid  += ingredient_details['carb']
                 total_lipid  += ingredient_details['fat']
                 total_canxi  += ingredient_details['canxi']
-                # total_phosphor += ingredient_details['phosphor']
-                # total_fe += ingredient_details['fe']
-                # total_vitamin_a += ingredient_details['vitamin_a']
-                # total_beta_caroten += ingredient_details['beta_caroten']
-                # total_vitamin_b1 += ingredient_details['vitamin_b1']
-                # total_vitamin_b2 += ingredient_details['vitamin_b2']
-                # total_vitamin_pp += ingredient_details['vitamin_pp']
-                # total_vitamin_c += ingredient_details['vitamin_c']
                 
             total_nutrition = {
                 "id": self.id,
@@ -64,14 +56,6 @@ class Dish(db.Model):
                 "carb": round(total_glucid, 2),
                 "fat": round(total_lipid, 2),
                 "canxi": round(total_canxi, 2),
-                # "phosphor": round(total_phosphor, 2),
-                # "fe": round(total_fe, 2),
-                # "vitamin_a": round(total_vitamin_a, 2),
-                # "beta_caroten": round(total_beta_caroten, 2),
-                # "vitamin_b1": round(total_vitamin_b1, 2),
-                # "vitamin_b2": round(total_vitamin_b2, 2),
-                # "vitamin_pp": round(total_vitamin_pp, 2),
-                # "vitamin_c": round(total_vitamin_c, 2),
                 }
             return total_nutrition
         else:

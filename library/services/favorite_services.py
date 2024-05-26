@@ -66,7 +66,6 @@ def get_favorite_by_user_id_services(user_id):
 		'message': 'success'
 	}), 200
 
-
 @jwt_required()
 def get_4_name_fav_by_user_id_services(user_id):
 	favorites = Favorite.query.filter_by(user_id=user_id, value=1).limit(4).all()
