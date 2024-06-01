@@ -57,7 +57,7 @@ def get_user_water_data(user_id):
                 "total_water": sum([item.water for item in user_statistic]),
             }
             # print(results)
-            return results
+            return jsonify(results), 200
         else:
             return jsonify({'message': 'No data found'}), 404
     except Exception as e:

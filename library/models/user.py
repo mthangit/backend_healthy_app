@@ -6,7 +6,7 @@ class User(db.Model):
 	username = db.Column(db.String(100), nullable=True)
 	age = db.Column(db.Integer, nullable=True)
 	height = db.Column(db.Integer, nullable=True)
-	weight = db.Column(db.Integer, nullable=True)
+	weight = db.Column(db.Float, nullable=True)
 	gender = db.Column(db.String(100), nullable=True)
 	exercise = db.Column(db.String(100), nullable=True)
 	aim = db.Column(db.String(100), nullable=True)
@@ -36,9 +36,9 @@ class User(db.Model):
 
 	def calculate_bmr(self):
 		if self.gender == 'male':
-			bmr = int(10 * self.weight + 6.25 * self.height - 5 * self.age + 5)
+			bmr = int(10 * int(self.weight) + 6.25 * self.height - 5 * self.age + 5)
 		elif self.gender == 'female':
-			bmr = int(10 * self.weight + 6.25 * self.height - 5 * self.age - 161)
+			bmr = int(10 * int(self.weight) + 6.25 * self.height - 5 * self.age - 161)
 		else:
 			return jsonify({'error': 'Invalid gender'})
 		return bmr

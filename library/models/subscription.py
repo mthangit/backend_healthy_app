@@ -13,6 +13,7 @@ class Subscription(db.Model):
 	# subscription_type is enum type (1: monthly, 2: yearly)
 	subscription_type = db.Column(db.Integer, nullable=True)
 	expired_date = db.Column(db.DateTime, nullable=True)
+	created_date = db.Column(db.DateTime, default=datetime.now())
 
 	def __init__(self, user_id, subscription_id ,cost, subscription_type):
 		self.user_id = user_id
