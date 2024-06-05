@@ -15,10 +15,10 @@ import hmac
 import uuid
 import random
 from datetime import datetime, timedelta
-from config import (
+from ..config import (
      				VNP_ENDPOINT,
      				VNP_HASH_SECRET, 
-                    VNP_TMNCODE, 
+                    VNP_TMN_CODE, 
                 	VNP_RETURN_URL, 
                     MOMO_RETURN_URL, 
                     MOMO_IPN_URL, 
@@ -138,7 +138,7 @@ def create_payment_vnpay():
     inputData = {
         'vnp_Version': '2.1.0',
         'vnp_Command': 'pay',
-        'vnp_TmnCode': VNP_TMNCODE,
+        'vnp_TmnCode': VNP_TMN_CODE,
         'vnp_Amount': vnp_Amount,
         'vnp_CurrCode': 'VND',
         'vnp_TxnRef': vnp_TxnRef,

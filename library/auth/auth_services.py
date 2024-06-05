@@ -10,7 +10,7 @@ from ..services.account_services import (add_account_services,
 										 get_account_by_email_services, 
 										 get_account_by_username_and_password_services, get_info_by_email
 										 )
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from ..services.user_services import add_user_services, get_user_by_account_id_services, get_username_by_account_id
 from ..services.account_services import authenticate, change_password
 from ..mail.mail_services import send_mail
@@ -185,7 +185,7 @@ def register(username, email, password):
 @jwt_required(refresh=True)
 def refresh_token():
 	identity = get_jwt_identity()
-	access_token = create_access_token(identity=identity, expires_delta=timedelta(hours=1))
+	access_token = create_access_token(identity=identity, expires_delta=timedelta(hours=3))
 	return jsonify({'access_token': access_token}), 200
 
 @jwt_required()
@@ -208,10 +208,26 @@ def logout():
 @jwt_required(refresh=True)
 def login_by_refresh_token():
 	identity = get_jwt_identity()
-	access_token = create_access_token(identity=identity, expires_delta=timedelta(hours=1))
+	jwt_data = get_jwt()
+
+	refresh_exp = datetime.fromtimestamp(jwt_data['exp'], timezone.utc)
+	current_time = datetime.now(timezone.utc)
+	one_day = timedelta(days=1)
+
+	if refresh_exp - current_time <= one_day:
+		refresh_token = create_refresh_token(identity=identity, expires_delta=timedelta(weeks=1))
+		refresh = True
+	else:
+		refresh_token = "old"
+		refresh = False
+	access_token = create_access_token(identity=identity, expires_delta=timedelta(hours=3))
 	return jsonify({
 		'message': "Logged in as {} with refresh token".format(identity['username']),
 		'access_token': access_token,
+		'refreshToken': refresh_token,
+		'expired_exp': refresh_exp,
+		'current_time': current_time,
+		'refresh': refresh,
 		'code': '200'
 	}), 200
 
@@ -221,6 +237,7 @@ def get_token():
 	return jsonify(token), 200
 
 @jwt_required(refresh=True)
+@jwt_required()
 def read():
 	token = get_jwt()
 	return jsonify(token), 200
