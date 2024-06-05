@@ -33,7 +33,7 @@ class CollaborativeFiltering:
     def convert_aim(self, value):
         if value == 'Giảm cân':
             return 3
-        elif value == 'Giữ cân':
+        elif value == 'Duy trì cân nặng':
             return 2
         return 1
         
