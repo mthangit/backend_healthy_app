@@ -1,6 +1,9 @@
 from ..extension import db
 from ..library_ma import DishSchema
 from ..models.dish import Dish
+from sqlalchemy import func
+import re
+
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -50,3 +53,18 @@ def get_all_dishes_services(userID, page, page_size):
         "message": "success"
     }
     return jsonify(response)
+
+def get_recommend_dish_by_name(name):
+    dishes = Dish.query.all()
+    
+    # Regular expression to match the exact word "cá"
+    pattern = re.compile(rf'\b{name}\b', re.IGNORECASE)
+    
+    # Filter dishes where the name contains the exact word "cá"
+    filtered_dishes = [dish for dish in dishes if pattern.search(dish.name)]
+    
+    # Convert to array of dictionary
+    result = dishes_schema.dump(filtered_dishes)
+    if not result:
+        return False
+    return result

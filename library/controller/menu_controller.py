@@ -34,7 +34,7 @@ def new_genetic_algorithm():
         return jsonify({'message': 'Unauthorized'}), 404
     GA = GeneticAlgorithm(10, 0.2, 5, account_id)
     a = GA.main_genetic_algorithm()
-    current_date = datetime.utcnow().date()
+    current_date = datetime.now().date()
     max_num_suggest = (SuggestedMenu.query.with_entities(func.max(SuggestedMenu.num_suggest))
                        .filter(SuggestedMenu.user_id == account_id, 
                                db.func.date(SuggestedMenu.date_suggest) == current_date).scalar())
@@ -62,7 +62,7 @@ def get_suggest_menu():
         user_account = Account.query.filter_by(id = account_id).first()
         if not user_account:
             return jsonify({'message': 'Account not found'}), 404
-        current_date = datetime.utcnow().date()
+        current_date = datetime.now().date()
         max_suggest_subquery = (db.session.query(func.max(SuggestedMenu.num_suggest))
                             .filter(SuggestedMenu.user_id == user_account.id, 
                                     db.func.date(SuggestedMenu.date_suggest) == current_date).scalar())

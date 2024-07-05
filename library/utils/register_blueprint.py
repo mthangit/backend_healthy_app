@@ -11,6 +11,7 @@ from ..controller.recipe_controller import recipes
 from ..controller.favorite_controller import favorites
 from ..controller.menu_controller import menus
 from ..data.import_data import data
+from ..detect.detect_services import detect
 
 def register_blueprint(app):
 	app.register_blueprint(users)
@@ -26,3 +27,5 @@ def register_blueprint(app):
 	app.register_blueprint(recipes)
 	app.register_blueprint(favorites)
 	app.register_blueprint(menus)
+	app.register_blueprint(detect)
+

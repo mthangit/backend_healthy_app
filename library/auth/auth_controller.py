@@ -30,6 +30,7 @@ def decrypt():
 	data = request.json.get('encrypted')
 	encrypted = data.encode()
 	decrypted = fernet.decrypt(encrypted)
+	
 	return jsonify({'decrypted': decrypted.decode()}), 200
 
 @auth.route('/api/encrypt', methods=['POST'])

@@ -3,7 +3,6 @@ from ..library_ma import IngredientSchema
 from ..models.ingredient import Ingredient
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_bcrypt import generate_password_hash, check_password_hash
 
 ingredient_schema = IngredientSchema()
 ingredients_schema = IngredientSchema(many=True)
@@ -35,3 +34,5 @@ def get_ingredient_by_id_services(ingredient_id):
 		'ingredient': result,
 		'message': 'success'
 	}), 200
+
+

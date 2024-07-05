@@ -39,12 +39,35 @@ class CollaborativeFiltering:
         
     def normalize_user_data(self, user_data):
         num_cols = len(user_data[0])
+        print(num_cols)
         for row in user_data:
             row[3] = self.convert_gender(row[3])
             row[4] = self.convert_exercise(row[4])
             row[5] = self.convert_aim(row[5])
-        mins = [min(row[i] for row in user_data) for i in range(num_cols)]
-        maxs = [max(row[i] for row in user_data) for i in range(num_cols)]
+
+        mins = []
+        for i in range(num_cols):
+            # Khởi tạo giá trị nhỏ nhất ban đầu là vô cùng lớn
+            min_value = float('inf')
+            for row in user_data:
+                # Tìm giá trị nhỏ nhất trong cột i\
+                if row[i] < min_value:
+                    min_value = row[i]
+            mins.append(min_value)
+
+        # Tính giá trị lớn nhất của mỗi cột
+        maxs = []
+        for i in range(num_cols):
+            # Khởi tạo giá trị lớn nhất ban đầu là vô cùng nhỏ
+            max_value = float('-inf')
+            for row in user_data:
+                # Tìm giá trị lớn nhất trong cột i
+                if row[i] > max_value:
+                    max_value = row[i]
+            maxs.append(max_value)
+
+        # mins = [min(row[i] for row in user_data) for i in range(num_cols)]
+        # maxs = [max(row[i] for row in user_data) for i in range(num_cols)]
         for row in user_data:
             for i in range(num_cols):
                 min_val, max_val = mins[i], maxs[i]

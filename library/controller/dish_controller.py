@@ -33,7 +33,8 @@ def recommend_dish():
     user_account = Account.query.filter_by(id = account_id).first()
     if not user_account:
         return jsonify({'message': 'Unauthorized'}), 404
-    CF = CollaborativeFiltering(user_account.id, 3)
+    print("account_id: ", account_id)
+    CF = CollaborativeFiltering(account_id, 3)
     recommend_dish_id = CF.generate_recommendations()
     page = int(request.args.get('page', 1))
     main_category = request.args.get('main_category', '').strip()

@@ -36,3 +36,8 @@ MOMO_IPN_URL = os.getenv('MOMO_IPN_URL')
 MOMO_PARTNER_CODE = os.getenv('MOMO_PARTNER_CODE')
 MOMO_ACCESS_KEY = os.getenv('MOMO_ACCESS_KEY')
 MOMO_SECRET_KEY = os.getenv('MOMO_SECRET_KEY')
+
+CLOUDINARY_NAME = os.getenv('cloudinary_name')
+CLOUDINARY_API_KEY = os.getenv('cloudinary_api_key')
+CLOUDINARY_API_SECRET = os.getenv('cloudinary_api_secret')
+
